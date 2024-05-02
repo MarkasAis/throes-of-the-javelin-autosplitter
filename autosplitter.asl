@@ -36,6 +36,8 @@ init {
 
 update {
     vars.watchers.UpdateAll(game);
+    print(vars.watchers["speedrunStarted"].Current.ToString());
+    print(vars.watchers["transitionCount"].Current.ToString());
 }
 
 start {
@@ -47,9 +49,9 @@ reset {
 }
 
 split {
-    if (vars.watchers["hasCollectedKey"].Changed) return true;
-    if (vars.watchers["transitionCount"].Current <= 5 && vars.watchers["transitionCount"].Changed) return true;
-    if (vars.watchers["berryCount"].Changed) return true;
-    if (vars.watchers["berryCount"].Current == 8 && vars.watchers["endedSpeedrun"].Current && vars.watchers["endedSpeedrun"].Changed) return true;
+    if (!vars.watchers["hasCollectedKey"].Old && vars.watchers["hasCollectedKey"].Current) return true;
+    if (vars.watchers["transitionCount"].Current <= 5 && vars.watchers["transitionCount"].Current > vars.watchers["transitionCount"].Old) return true;
+    if (vars.watchers["berryCount"].Old < vars.watchers["berryCount"].Current) return true;
+    if (vars.watchers["berryCount"].Current == 8 && vars.watchers["endedSpeedrun"].Current && !vars.watchers["endedSpeedrun"].Old && vars.watchers["endedSpeedrun"].Current) return true;
     return false;
 }
